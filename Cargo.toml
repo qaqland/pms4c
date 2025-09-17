@@ -1,0 +1,11 @@
+[package]
+name = "pms4c"
+description = "purge-markdown-softbreak-for-chinese"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+indoc = "2.0.6"
+itertools = "0.14.0"
+pulldown-cmark = "0.13.0"
+pulldown-cmark-to-cmark = "21.0.0"
