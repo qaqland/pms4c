@@ -1,4 +1,4 @@
-use itertools::Itertools;
+use itertools::{Itertools, MultiPeek};
 use pulldown_cmark::{CodeBlockKind, Event, Options, Parser, Tag, TagEnd};
 
 mod cjk;
@@ -14,13 +14,13 @@ pub fn pms4c(input: &'_ str) -> Vec<Event<'_>> {
 
     while let Some(event) = iter.next() {
         match &event {
-            Event::Start(Tag::Paragraph) => ready = true,
-            Event::End(TagEnd::Paragraph) => ready = true,
+            Event::End(TagEnd::Paragraph) => ready = false,
             Event::Text(text) => {
                 ready = cjk::ends_with_cjk(&text);
             }
             Event::SoftBreak => {
-                if ready {
+                if ready && next_text_start_with_cjk(&mut iter) {
+                    // skip this event to remove space
                     continue;
                 }
             }
@@ -32,4 +32,22 @@ pub fn pms4c(input: &'_ str) -> Vec<Event<'_>> {
     }
 
     events
+}
+
+fn next_text_start_with_cjk(iter: &mut MultiPeek<Parser<'_>>) -> bool {
+    while let Some(event) = iter.peek() {
+        match event {
+            Event::Text(text) => return cjk::starts_with_cjk(text),
+            Event::Start(Tag::Strikethrough)
+            | Event::End(TagEnd::Strikethrough)
+            | Event::Start(Tag::Strong)
+            | Event::End(TagEnd::Strong)
+            | Event::Start(Tag::Emphasis)
+            | Event::End(TagEnd::Emphasis) => {
+                continue;
+            }
+            _ => return false,
+        }
+    }
+    false
 }

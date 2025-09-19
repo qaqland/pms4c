@@ -4,7 +4,7 @@ use pulldown_cmark::{CodeBlockKind, Event, Options, Parser, Tag, TagEnd};
 use pms4c::pms4c;
 
 #[test]
-fn simple_paragraph() {
+fn common_common() {
     let input = indoc! {"
         大家
         早上好
@@ -12,7 +12,8 @@ fn simple_paragraph() {
 
     let events = vec![
         Event::Start(Tag::Paragraph),
-        Event::Text("大家早上好".into()),
+        Event::Text("大家".into()),
+        Event::Text("早上好".into()),
         Event::End(TagEnd::Paragraph),
     ];
 
@@ -20,7 +21,7 @@ fn simple_paragraph() {
 }
 
 #[test]
-fn simple_softbreak() {
+fn strong_common() {
     let input = indoc! {"
         大**家**
         早上好
@@ -40,7 +41,7 @@ fn simple_softbreak() {
 }
 
 #[test]
-fn simple_hardbreak() {
+fn common_emphasis() {
     let input = indoc! {"
         大家
         *早上*好
@@ -60,16 +61,26 @@ fn simple_hardbreak() {
 }
 
 #[test]
-fn block_quote_1() {
+fn blockquote_1() {
     let input = indoc! {"
         > 大家
         > 早上好
     "};
-    assert_eq!(input, ">\n>大家早上好");
+
+    let events = vec![
+        Event::Start(Tag::BlockQuote(None)),
+        Event::Start(Tag::Paragraph),
+        Event::Text("大家".into()),
+        Event::Text("早上好".into()),
+        Event::End(TagEnd::Paragraph),
+        Event::End(TagEnd::BlockQuote(None)),
+    ];
+
+    assert_eq!(events, pms4c(input));
 }
 
 #[test]
-fn block_quote_2() {
+fn codeblock_1() {
     let input = indoc! {"
         ```
         大家
@@ -80,7 +91,7 @@ fn block_quote_2() {
 }
 
 #[test]
-fn code_block() {
+fn en_common_common() {
     let input = indoc! {"
         Hello
         大家早上好
@@ -88,7 +99,7 @@ fn code_block() {
 }
 
 #[test]
-fn simple_inline_end() {
+fn en_strong_common() {
     let input = indoc! {"
         **Hello**
         大家早上好

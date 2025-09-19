@@ -2,8 +2,7 @@ use indoc::indoc;
 use pulldown_cmark::{CodeBlockKind, Event, Options, Parser, Tag, TagEnd};
 
 fn parse(input: &'_ str) -> Vec<Event<'_>> {
-    let mut options = Options::empty();
-    options.insert(Options::ENABLE_STRIKETHROUGH);
+    let options = Options::all();
     let parser = Parser::new_ext(input, options);
     parser.collect()
 }
