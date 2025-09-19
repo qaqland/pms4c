@@ -6,8 +6,11 @@ const CJK_RANGES: &[(u32, u32)] = &[
     (0x3000, 0x303f), // CJK Symbols and Punctuation
     (0x31c0, 0x31ef), // CJK Strokes
     (0x3200, 0x32ff), // Enclosed CJK Letters and Months
-    (0x4e00, 0x9fff), // CJK Unified Ideographs
     (0x3400, 0x4dbf), // CJK Unified Ideographs Extension A
+    (0x4e00, 0x9fff), // CJK Unified Ideographs
+    (0xf900, 0xfaff), // CJK Compatibility Ideographs
+    (0xfe30, 0xfe4f), // CJK Compatibility Forms
+    (0xff00, 0xffef), // Halfwidth and Fullwidth Forms (包含全角标点符号)
                       // TO BE CONTINUE
 ];
 
@@ -91,5 +94,30 @@ mod tests {
 
         assert!(starts_with_cjk("中文日"));
         assert!(ends_with_cjk("中文日"));
+    }
+
+    #[test]
+    fn test_cjk_punctuation() {
+        // 测试中文全角标点符号
+        assert!(is_cjk_character('，'));
+        assert!(is_cjk_character('。'));
+        assert!(is_cjk_character('！'));
+        assert!(is_cjk_character('？'));
+        assert!(is_cjk_character('；'));
+        assert!(is_cjk_character('：'));
+        assert!(is_cjk_character('「'));
+        assert!(is_cjk_character('」'));
+        assert!(is_cjk_character('『'));
+        assert!(is_cjk_character('』'));
+        assert!(is_cjk_character('【'));
+        assert!(is_cjk_character('】'));
+        assert!(is_cjk_character('《'));
+        assert!(is_cjk_character('》'));
+
+        // 测试标点符号在字符串中的检测
+        assert!(starts_with_cjk("，中文"));
+        assert!(ends_with_cjk("中文。"));
+        assert!(starts_with_cjk("！测试"));
+        assert!(ends_with_cjk("测试？"));
     }
 }

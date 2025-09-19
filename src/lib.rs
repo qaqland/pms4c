@@ -1,13 +1,9 @@
 use itertools::{Itertools, MultiPeek};
-use pulldown_cmark::{CodeBlockKind, Event, Options, Parser, Tag, TagEnd};
+use pulldown_cmark::{Event, Parser, Tag, TagEnd};
 
 mod cjk;
 
-pub fn pms4c(input: &'_ str) -> Vec<Event<'_>> {
-    let mut options = Options::empty();
-    options.insert(Options::ENABLE_STRIKETHROUGH);
-    let parser = Parser::new_ext(input, options);
-
+pub fn pms4c<'a>(parser: Parser) -> Vec<Event> {
     let mut events = Vec::new();
     let mut iter = parser.multipeek();
     let mut ready = false;
@@ -27,7 +23,6 @@ pub fn pms4c(input: &'_ str) -> Vec<Event<'_>> {
             Event::End(TagEnd::Emphasis) | Event::End(TagEnd::Strong) => (),
             _ => ready = false,
         };
-
         events.push(event);
     }
 

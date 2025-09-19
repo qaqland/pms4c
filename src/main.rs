@@ -1,8 +1,6 @@
 use indoc::indoc;
 use pulldown_cmark_to_cmark::cmark;
 
-use pms4c::pms4c;
-
 fn main() {
     let input = indoc! {"
         那是一个深邃而宁静的秋日黄昏，
@@ -17,7 +15,10 @@ fn main() {
         书页已然泛黄，却依然散发出一种混合着墨香与时光气息的独特味道。
     "};
     let mut buf = String::with_capacity(input.len());
-    let events = pms4c(input);
+    let options = pulldown_cmark::Options::all();
+    let parser = pulldown_cmark::Parser::new_ext(input, options);
+    let events = pms4c::pms4c(parser);
+
     cmark(events.into_iter(), &mut buf).unwrap();
     println!("{}", buf);
 }
