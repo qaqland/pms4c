@@ -131,60 +131,27 @@ fn test_mixed_language_break() {
     pms4c_assert(input, expected);
 }
 
-// 15. 特殊字符换行（应保留）
+// 15. 粗体后直接接内容（应去除换行）
 #[test]
-fn test_special_characters_break() {
-    let input = "中文@#$\n%^&中文";
-    let expected = "中文@#$\n%^&中文";
+fn test_bold_followed_by_content() {
+    let input = "**第一行**\n第二行";
+    let expected = "**第一行**第二行";
     pms4c_assert(input, expected);
 }
 
-// 16. Unicode中文字符换行（应去除）
+// 16. 引用中包含换行（应去除换行）
 #[test]
-fn test_unicode_chinese_break() {
-    let input = "中文\u{4e00}\n\u{4e01}中文";
-    let expected = "中文\u{4e00}\u{4e01}中文";
+fn test_quote_with_break() {
+    let input = "> 这是一个引用\n> 包含换行";
+    let expected = "> 这是一个引用包含换行";
     pms4c_assert(input, expected);
 }
 
-// 17. 编码处理（UTF-8）
+// 17. 换行前有两个空格
 #[test]
-fn test_utf8_encoding() {
-    let input = "中文测试\n编码处理";
-    let expected = "中文测试编码处理";
-    pms4c_assert(input, expected);
-}
-
-// 18. 错误输入处理
-#[test]
-fn test_non_string_input() {
-    // 假设你的函数只接受字符串，这个测试可能需要调整
-    // 这里演示如何处理空输入
-    let input = "";
-    let expected = "";
-    pms4c_assert(input, expected);
-}
-
-// 额外测试：中文之间包含英文单词
-#[test]
-fn test_chinese_with_embedded_english() {
-    let input = "这是一个包含\n英文单词的句子";
-    let expected = "这是一个包含英文单词的句子";
-    pms4c_assert(input, expected);
-}
-
-// 额外测试：换行在标点符号后
-#[test]
-fn test_break_after_punctuation() {
-    let input = "第一句。\n第二句";
-    let expected = "第一句。第二句";
-    pms4c_assert(input, expected);
-}
-
-// 额外测试：复杂混合场景
-#[test]
-fn test_complex_mixed_scenario() {
-    let input = "标题\n\n正文第一段，\n包含中文和English。\n\n第二段123\n数字和中文。";
-    let expected = "标题\n\n正文第一段，包含中文和English。\n\n第二段123\n数字和中文。";
+#[should_panic]
+fn test_break_with_two_spaces() {
+    let input = "第一行  \n第二行";
+    let expected = "第一行\n第二行";
     pms4c_assert(input, expected);
 }

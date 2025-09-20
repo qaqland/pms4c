@@ -3,7 +3,7 @@ use pulldown_cmark::{Event, Parser, Tag, TagEnd};
 
 mod cjk;
 
-pub fn pms4c<'a>(parser: Parser) -> Vec<Event> {
+pub fn pms4c(parser: Parser) -> Vec<Event> {
     let mut events = Vec::new();
     let mut iter = parser.multipeek();
     let mut ready = false;

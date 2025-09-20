@@ -7,5 +7,10 @@ edition = "2024"
 [dependencies]
 indoc = "2.0.6"
 itertools = "0.14.0"
-pulldown-cmark = "0.13.0"
+mdbook = { version = "0.4.52", default-features = false }
+pulldown-cmark = { version = "0.13.0", default-features = false }
 pulldown-cmark-to-cmark = "21.0.0"
+serde_json = "1.0.145"
+
+[dev-dependencies]
+pulldown-cmark = "0.13.0"
